@@ -28,7 +28,7 @@ function updateVetClinicsKeys(vetClinics) {
                           opening: availability}) => ({name, stateName, availability}));
 }
 
-app.get('/search', async (req, res) => {
+app.get('/clinicSearch', async (req, res) => {
   const queryName = req.query.name;
   const queryState = req.query.state;
   const queryFrom = req.query.from;
