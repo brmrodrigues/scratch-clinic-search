@@ -4,17 +4,17 @@
 
 # Getting started
 - Clone this repository
-```
+```sh
 git clone git@github.com:brmrodrigues/scratch-clinic-search.git
 ```
 - Install dependencies
-```
-cd scratch
+```sh
+cd scratch-clinic-search
 npm install
 ```
 
 - Run the server locally with
-```
+```sh
 npm run dev
 ```
 
