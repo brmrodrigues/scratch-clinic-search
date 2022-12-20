@@ -7,11 +7,32 @@ const app = express();
 const dentalClinicsUrl = 'https://storage.googleapis.com/scratchpay-code-challenge/dental-clinics.json';
 const vetClinicsUrl = 'https://storage.googleapis.com/scratchpay-code-challenge/vet-clinics.json';
 
+function clinicNameExists(clinicName, queryName) {
+  return (!queryName ||
+          (clinicName == queryName));
+}
+
+function clinicStateExists(clinicState, queryState) {
+  return (!queryState ||
+          (clinicState == queryState || queryState == statesByCode[clinicState] || queryState == statesByName[clinicState]));
+}
+
+function isInClinicAvailability(clinicAvailability, queryFrom, queryTo) {
+  return (!queryFrom || !queryTo ||
+          (clinicAvailability.from >= queryFrom && clinicAvailability.to <= queryTo));
+}
+
+function updateVetClinicsKeys(vetClinics) {
+  return vetClinics.map(({clinicName: name,
+                          stateCode: stateName,
+                          opening: availability}) => ({name, stateName, availability}));
+}
+
 app.get('/search', async (req, res) => {
   const queryName = req.query.name;
   const queryState = req.query.state;
-  const fromQuery = req.query.from;
-  const toQuery = req.query.to;
+  const queryFrom = req.query.from;
+  const queryTo = req.query.to;
 
   try {
     let [dentalClinics, vetClinics] = await Promise.all([
@@ -21,19 +42,13 @@ app.get('/search', async (req, res) => {
     const updatedVetClinics = vetClinics.map(({clinicName: name,
                                                stateCode: stateName,
                                                opening: availability}) => ({name, stateName, availability}));
-    const allClinics = dentalClinics.concat(updatedVetClinics);
+
+    const allClinics = dentalClinics.concat(updateVetClinicsKeys(vetClinics));
 
     const filteredClinics = allClinics.filter(({name, stateName, availability}) => {
-      if (queryName && name != queryName) {
-        return false;
-      }
-      if (queryState && !(stateName == queryState || queryState == statesByCode[stateName] || queryState == statesByName[stateName])) {
-        return false;
-      }
-      if (fromQuery && toQuery && !(availability.from <= fromQuery && availability.to >= toQuery)) {
-        return false;
-      }
-      return true;
+       return (clinicNameExists(name, queryName) &&
+               clinicStateExists(stateName, queryState) &&
+               isInClinicAvailability(availability, queryFrom, queryTo));
     });
 
     res.send(filteredClinics);
