@@ -1,5 +1,5 @@
 const express = require('express');
-const clinics = require('./clinics.js')
+const clinics = require('./clinics')
 
 const app = express();
 

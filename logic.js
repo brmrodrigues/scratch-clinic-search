@@ -1,4 +1,4 @@
-const { statesByCode, statesByName } = require('./states.js');
+const { statesByCode, statesByName } = require('./states');
 
 const clinicNameExists = (clinicName, queryName) =>
   (!queryName || (clinicName == queryName));

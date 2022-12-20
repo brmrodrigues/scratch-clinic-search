@@ -3,7 +3,7 @@ const { clinicNameExists,
         isInClinicAvailability,
         updateVetClinicsKeys,
         filterClinics
-      } = require('./logic.js');
+      } = require('./logic');
 
 const dentalClinicsUrl = 'https://storage.googleapis.com/scratchpay-code-challenge/dental-clinics.json';
 const vetClinicsUrl = 'https://storage.googleapis.com/scratchpay-code-challenge/vet-clinics.json';
